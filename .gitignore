@@ -12,3 +12,6 @@
 hs_err_pid*
 /UnitTesting-TestExamples/target/
 /UnitTesting-TestExamples/nbproject/
+/UnitTest-Practice/nbproject/private/
+/UnitTest-Practice/nbproject/
+/UnitTest-Practice/target/
