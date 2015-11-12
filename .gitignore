@@ -15,3 +15,6 @@ hs_err_pid*
 /UnitTest-Practice/nbproject/private/
 /UnitTest-Practice/nbproject/
 /UnitTest-Practice/target/
+UnitTest-Practice-Resolved/nbproject/
+UnitTest-Practice-Resolved/target/
+.DS_Store
