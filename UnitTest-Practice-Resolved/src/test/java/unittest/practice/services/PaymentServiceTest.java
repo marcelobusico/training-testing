@@ -39,25 +39,17 @@ public class PaymentServiceTest {
         //Setup
         AccountService accountService = new AccountService(20f);
         PaymentService paymentService = new PaymentService(accountService);
-        Payment payment1 = new Payment("Test Payment 1", 10f);
-        Payment payment2 = new Payment("Test Payment 2", 5f);
+        Payment payment = new Payment("Test Payment", 15f);
 
         //Test
-        paymentService.registerPayment(payment1);
+        paymentService.registerPayment(payment);
 
         //Verify
-        assertEquals("Available amount was not updated after registering payment 1.",
-                10.f, accountService.getAvailableAmount(), 0.01f);
-
-        //Test
-        paymentService.registerPayment(payment2);
-
-        //Verify
-        assertEquals("Available amount was not updated after registering payment 2.",
+        assertEquals("Available amount was not updated after registering payment.",
                 5.f, accountService.getAvailableAmount(), 0.01f);
     }
 
-    @Test
+    @Test()
     public void registerPayment_WithNegativeAmount_ShouldFailWithException() {
         //Setup
         AccountService accountService = new AccountService(20f);
@@ -67,11 +59,10 @@ public class PaymentServiceTest {
         //Test
         try {
             paymentService.registerPayment(payment);
-            fail("Exception for invalid amount should be thrown here.");
-        } catch (IllegalStateException ex) {
-            //Verify
-            assertEquals("Unexpected exception message for invalid payment.",
-                    "Payment should have positive amount.", ex.getMessage());
+            fail("Exception should be thrown.");
+        } catch (IllegalArgumentException ex) {
+            assertEquals("Exception message invalid.",
+                    "Invalid payment amount.", ex.getMessage());
         }
     }
 
@@ -85,11 +76,39 @@ public class PaymentServiceTest {
         //Test
         try {
             paymentService.registerPayment(payment);
-            fail("Exception for invalid amount should be thrown here.");
+            fail("Exception should be thrown.");
         } catch (IllegalStateException ex) {
-            //Verify
-            assertEquals("Unexpected exception message for invalid payment.",
-                    "Account without enough fundings for payment.", ex.getMessage());
+            assertEquals("Exception message invalid.",
+                    "Insufficient account foundings.", ex.getMessage());
         }
     }
+
+    @Test
+    public void registerPayment_WithNullPayment_ShouldIgnorePayment() {
+        //Setup
+        AccountService accountService = new AccountService(20f);
+        PaymentService paymentService = new PaymentService(accountService);
+        Payment payment = null;
+
+        //Test
+        paymentService.registerPayment(payment);
+
+        //Verify
+        assertEquals("Available amount was updated after registering null payment.",
+                20.f, accountService.getAvailableAmount(), 0.01f);
+    }
+
+    @Test
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
+    public void paymentService_withNullAccountService_ShouldFailConstruction() {
+        //Test
+        try {
+            new PaymentService(null);
+            fail("Exception should be thrown.");
+        } catch (IllegalArgumentException ex) {
+            assertEquals("Exception message invalid.",
+                    "AccountService null.", ex.getMessage());
+        }
+    }
+
 }

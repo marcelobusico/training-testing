@@ -13,18 +13,24 @@ public class PaymentService {
     private final AccountService accountService;
 
     public PaymentService(AccountService accountService) {
+        if (accountService == null) {
+            throw new IllegalArgumentException("AccountService null.");
+        }
         this.accountService = accountService;
     }
 
     public void registerPayment(Payment payment) {
-        if (payment.getAmount() < 0) {
-            throw new IllegalStateException("Payment should have positive amount.");
-        }
-        if (accountService.getAvailableAmount() < payment.getAmount()) {
-            throw new IllegalStateException("Account without enough fundings for payment.");
-        }
+        if (payment != null) {
+            if (payment.getAmount() < 0) {
+                throw new IllegalArgumentException("Invalid payment amount.");
+            }
 
-        accountService.debitFromAccount(payment.getAmount());
+            if (accountService.getAvailableAmount() < payment.getAmount()) {
+                throw new IllegalStateException("Insufficient account foundings.");
+            }
+
+            accountService.debitFromAccount(payment.getAmount());
+        }
     }
 
     public Collection<Payment> getRegisteredPayments() {
